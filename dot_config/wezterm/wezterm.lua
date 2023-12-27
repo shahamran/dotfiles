@@ -1,86 +1,165 @@
 -- Pull in the wezterm API
-local wezterm = require 'wezterm'
-local act = wezterm.action
+local wez = require 'wezterm'
+local act = wez.action
+local nf = wez.nerdfonts
 
 local config = {}
-if wezterm.config_builder then
-  config = wezterm.config_builder()
+if wez.config_builder then
+  config = wez.config_builder()
 end
 
--- Appearance
+-- General appearance
 
+-- config.window_decorations = 'INTEGRATED_BUTTONS | RESIZE'
+config.enable_scroll_bar = true
+config.font_size = 13
+config.harfbuzz_features = {'calt=0', 'clig=0', 'liga=0'}
+config.window_close_confirmation = 'NeverPrompt'
 config.color_scheme = 'Dracula (Official)'
-local theme = wezterm.color.get_builtin_schemes()[config.color_scheme]
 
+local theme = wez.color.get_builtin_schemes()[config.color_scheme]
+local gray = theme.scrollbar_thumb or '#44475a'
+local white = theme.foreground
+local black = theme.ansi[1]
 local accent = theme.brights[5]
-local active_bg = accent
-local inactive_bg = theme.background
-local inactive_hover_bg = theme.ansi[1]
-config.colors = {
-  tab_bar = {
-    inactive_tab_edge = theme.background,
-    active_tab = {
-      bg_color = active_bg,
-      fg_color = theme.cursor_fg,
-    },
-    inactive_tab = {
-      bg_color = inactive_bg,
-      fg_color = theme.foreground,
-    },
-    inactive_tab_hover = {
-      bg_color = inactive_hover_bg,
-      fg_color = theme.foreground,
-    },
-    new_tab = {
-      bg_color = inactive_bg,
-      fg_color = theme.foreground,
-    },
-    new_tab_hover = {
-      bg_color = inactive_hover_bg,
-      fg_color = theme.foreground,
-    },
-  },
-}
-config.command_palette_bg_color = theme.ansi[1]
-config.command_palette_fg_color = theme.brights[8]
+local active = theme.brights[1]
+local strong = theme.brights[6]
 
-config.window_frame = {
-  font_size = 13,
-  active_titlebar_bg = theme.background,
-  -- inactive_titlebar_bg = theme.selection_bg,
-}
+config.command_palette_bg_color = black
+config.command_palette_fg_color = white
+config.command_palette_rows = 14
 
-config.window_padding = {
-  left = 5,
-  right = 5,
-  bottom = 0,
-  top = 5,  -- Don't render on title bar
-}
+-- Configure tab bar and status line
 
+config.use_fancy_tab_bar = false
 config.tab_bar_at_bottom = true
 
-wezterm.on('update-right-status', function(window, pane)
-  local domain = pane:get_domain_name()
-  local workspace = window:active_workspace()
-  local right_padding = '   '
-  local status = string.format('domain: %s - workspace: %s %s', domain, workspace, right_padding)
-  local table = window:active_key_table()
-  if table then
-    status = string.format('table: %s - %s', table, status)
+config.colors = {
+  tab_bar = {
+    background = gray,
+    new_tab = {
+      bg_color = gray,
+      fg_color = white,
+    },
+    new_tab_hover = {
+      bg_color = strong,
+      fg_color = gray,
+    },
+  }
+}
+
+config.tab_bar_style = {
+  new_tab_hover = wez.format {
+    { Background = { Color = strong } },
+    { Foreground = { Color = gray } },
+    { Text = nf.ple_lower_left_triangle },
+    { Text = '+' },
+    { Text = nf.ple_upper_right_triangle },
+  },
+}
+
+-- This function returns the suggested title for a tab.
+-- It prefers the title that was set via `tab:set_title()`
+-- or `wezterm cli set-tab-title`, but falls back to the
+-- title of the active pane in that tab.
+local function tab_title(tab_info)
+  local title = tab_info.tab_title
+  -- if the tab title is explicitly set, take that
+  if title and #title > 0 then
+    return title
   end
-  window:set_right_status(wezterm.format {
-      { Background = { Color = theme.background } },
-      { Foreground = { Color = theme.foreground } },
-      { Attribute = { Italic = true } },
-      { Text = status },
-    })
+  -- Otherwise, use the title from the active pane
+  -- in that tab
+  return tab_info.active_pane.title
+end
+
+wez.on(
+  'format-tab-title',
+  function (tab, tabs, panes, config, hover, max_width)
+    local background = gray
+    local foreground = white
+    if tab.is_active then
+      background = active
+    elseif hover then
+      background = strong
+      foreground = gray
+    end
+    local edge_bg = gray
+    local edge_fg = background
+    local title = tab_title(tab)
+    -- Ensure enough space for separators and spaces
+    title = wez.truncate_right(title, max_width - 4)
+    -- Each tab has this powerline diagonal effect: \ tab \
+    return {
+      { Background = { Color = edge_bg } },
+      { Foreground = { Color = edge_fg } },
+      { Text = nf.ple_upper_right_triangle },
+      { Background = { Color = background } },
+      { Foreground = { Color = foreground } },
+      { Text = ' ' .. title .. ' ' },
+      { Background = { Color = edge_bg } },
+      { Foreground = { Color = edge_fg } },
+      { Text = nf.ple_lower_left_triangle },
+    }
+  end
+)
+
+wez.on('update-status', function(window, pane)
+  -- Draw current workspace on the left
+  local workspace = window:active_workspace()
+  local left_bg = accent
+  local left_fg = gray
+  -- Change color if leader is active
+  if window:leader_is_active() then
+    left_bg = theme.brights[7]
+  end
+  local left_status = {
+    { Background = { Color = left_bg } },
+    { Foreground = { Color = left_fg } },
+    { Text = ' ' .. workspace .. ' ' },
+    { Text = nf.ple_upper_right_triangle },
+  }
+  window:set_left_status(wez.format(left_status))
+
+  local elements = {}
+
+  -- Add the given text to the right status line, with a nice
+  -- / <text> / effect.
+  local function push(text, is_last)
+    elements[#elements+1] = { Background = { Color = active } }
+    elements[#elements+1] = { Foreground = { Color = gray } }
+    elements[#elements+1] = { Text = nf.ple_upper_left_triangle }
+    elements[#elements+1] = { Foreground = { Color = white } }
+    elements[#elements+1] = { Text = ' ' .. text .. ' ' }
+    if not is_last then
+      elements[#elements+1] = { Foreground = { Color = gray } }
+      elements[#elements+1] = { Text = nf.ple_lower_right_triangle }
+    end
+  end
+
+  local mode = window:active_key_table()
+  if mode then
+    push(mode, false)
+  end
+
+  local cells = {
+    wez.strftime('%Y-%m-%d %H:%M'),
+    pane:get_domain_name(),
+  }
+  for i=1,#cells do
+    push(cells[i], i == #cells)
+  end
+
+  window:set_right_status(wez.format(elements))
 end)
+
+-- Key bindings
 
 -- Use CTRL-Space as leader
 config.leader = {
   key = ' ',
   mods = 'CTRL',
-  timeout_milliseconds = 2000,
+  timeout_milliseconds = 3000,
 }
 
 config.keys = {
@@ -215,13 +294,6 @@ config.unix_domains = {
 -- `wezterm connect unix` by default, connecting to the unix
 -- domain on startup.
 -- If you prefer to connect manually, leave out this line.
--- config.default_gui_startup_args = { 'connect', 'unix' }
-
--- config.window_decorations = 'INTEGRATED_BUTTONS | RESIZE'
-config.enable_scroll_bar = true
-config.font_size = 13
-config.harfbuzz_features = {'calt=0', 'clig=0', 'liga=0'}
-
-config.window_close_confirmation = 'NeverPrompt'
+config.default_gui_startup_args = { 'connect', 'unix' }
 
 return config
