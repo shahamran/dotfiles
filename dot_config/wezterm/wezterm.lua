@@ -78,7 +78,8 @@ end
 
 wez.on(
   'format-tab-title',
-  function (tab, tabs, panes, config, hover, max_width)
+---@diagnostic disable-next-line: unused-local
+  function (tab, tabs, panes, _config, hover, max_width)
     local background = gray
     local foreground = white
     if tab.is_active then
