@@ -16,6 +16,9 @@ config.font_size = 13
 config.harfbuzz_features = {'calt=0', 'clig=0', 'liga=0'}
 config.window_close_confirmation = 'NeverPrompt'
 config.color_scheme = 'Dracula (Official)'
+config.window_padding = {
+  bottom = 0,
+}
 
 local theme = wez.color.get_builtin_schemes()[config.color_scheme]
 local gray = theme.scrollbar_thumb or '#44475a'
@@ -228,6 +231,15 @@ config.keys = {
     key = '-',
     mods = 'LEADER',
     action = act.SplitVertical { domain = 'CurrentPaneDomain' },
+  },
+  -- Tmux-like move-pane-to-new-tab
+  {
+    key = '!',
+    mods = 'LEADER',
+    action = wez.action_callback(function(_, pane)
+      local tab, _ = pane:move_to_new_tab()
+      tab:activate()
+    end),
   },
   { -- tmux-fingers-like mode
     key = ' ',
