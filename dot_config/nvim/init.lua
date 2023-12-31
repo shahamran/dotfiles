@@ -315,6 +315,9 @@ vim.keymap.set('n', '<leader>Q', ':confirm qa<cr>', { desc = 'Quit if no unsaved
 vim.keymap.set('n', '[b', ':bprevious<cr>', { desc = 'Go to previous Buffer', silent = true })
 vim.keymap.set('n', ']b', ':bnext<cr>', { desc = 'Go to next Buffer', silent = true })
 
+vim.keymap.set('n', '[q', ':cprevious<cr>', { desc = 'Go to previous quickfix item', silent = true })
+vim.keymap.set('n', ']q', ':cnext<cr>', { desc = 'Go to next quickfix item', silent = true })
+
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
@@ -510,6 +513,7 @@ local on_attach = function(client, bufnr)
 
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+  nmap('<leader>ch', vim.lsp.buf.incoming_calls, '[C]all [H]ierarchy')
 
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
@@ -560,7 +564,7 @@ end
 
 -- document existing key chains
 require('which-key').register {
-  ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
+  ['<leader>c'] = { name = '[C]ode / [C]all', _ = 'which_key_ignore' },
   ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
   ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
   ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
@@ -628,6 +632,10 @@ mason_lspconfig.setup_handlers {
     }
   end,
 }
+
+-- Disable virtual text for diagnostics
+--
+vim.diagnostic.config({virtual_text = false})
 
 -- Configure LSP client to have rounded window borders.
 
