@@ -162,12 +162,17 @@ require('lazy').setup({
   },
 
   {
+    -- Set theme
     'Mofiqul/dracula.nvim',
+    -- 'catppuccin/nvim',
     priority = 1000,
     config = function()
       vim.cmd.colorscheme 'dracula'
+      -- vim.cmd.colorscheme 'catppuccin-macchiato'
       -- Set inlay hint color to comment color
-      vim.cmd('highlight LspInlayHint guifg=#6272A4')
+      local inlay_hl = vim.api.nvim_get_hl(0, { name = 'Comment' })
+      inlay_hl.italic = false
+      vim.api.nvim_set_hl(0, 'LspInlayHint', inlay_hl)
     end,
   },
 

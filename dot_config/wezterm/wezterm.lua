@@ -16,20 +16,20 @@ config.font_size = 13
 config.harfbuzz_features = {'calt=0', 'clig=0', 'liga=0'}
 config.window_close_confirmation = 'NeverPrompt'
 config.color_scheme = 'Dracula (Official)'
+-- config.color_scheme = 'Catppuccin Macchiato'
 config.window_padding = {
   bottom = 0,
 }
 
 local theme = wez.color.get_builtin_schemes()[config.color_scheme]
-local gray = theme.scrollbar_thumb or '#44475a'
-local white = theme.foreground
-local black = theme.ansi[1]
+local theme_bg = theme.background
+local theme_fg = theme.foreground
 local accent = theme.brights[5]
 local active = theme.brights[1]
-local strong = theme.brights[6]
+local strong = theme.brights[3]
 
-config.command_palette_bg_color = black
-config.command_palette_fg_color = white
+config.command_palette_bg_color = theme_bg
+config.command_palette_fg_color = theme_fg
 config.command_palette_rows = 14
 
 -- Configure tab bar and status line
@@ -39,14 +39,14 @@ config.tab_bar_at_bottom = true
 
 config.colors = {
   tab_bar = {
-    background = gray,
+    background = theme_bg,
     new_tab = {
-      bg_color = gray,
-      fg_color = white,
+      bg_color = theme_bg,
+      fg_color = theme_fg,
     },
     new_tab_hover = {
       bg_color = strong,
-      fg_color = gray,
+      fg_color = theme_bg,
     },
   }
 }
@@ -54,7 +54,7 @@ config.colors = {
 config.tab_bar_style = {
   new_tab_hover = wez.format {
     { Background = { Color = strong } },
-    { Foreground = { Color = gray } },
+    { Foreground = { Color = theme_bg } },
     { Text = nf.ple_lower_left_triangle },
     { Text = '+' },
     { Text = nf.ple_upper_right_triangle },
@@ -80,15 +80,15 @@ wez.on(
   'format-tab-title',
 ---@diagnostic disable-next-line: unused-local
   function (tab, tabs, panes, _config, hover, max_width)
-    local background = gray
-    local foreground = white
+    local background = theme_bg
+    local foreground = theme_fg
     if tab.is_active then
       background = active
     elseif hover then
       background = strong
-      foreground = gray
+      foreground = theme_bg
     end
-    local edge_bg = gray
+    local edge_bg = theme_bg
     local edge_fg = background
     local title = tab_title(tab)
     -- Ensure enough space for separators and spaces
@@ -112,10 +112,10 @@ wez.on('update-status', function(window, pane)
   -- Draw current workspace on the left
   local workspace = window:active_workspace()
   local left_bg = accent
-  local left_fg = gray
+  local left_fg = theme_bg
   -- Change color if leader is active
   if window:leader_is_active() then
-    left_bg = theme.brights[7]
+    left_bg = theme.compose_cursor
   end
   local left_status = {
     { Background = { Color = left_bg } },
@@ -131,12 +131,12 @@ wez.on('update-status', function(window, pane)
   -- / <text> / effect.
   local function push(text, is_last)
     elements[#elements+1] = { Background = { Color = active } }
-    elements[#elements+1] = { Foreground = { Color = gray } }
+    elements[#elements+1] = { Foreground = { Color = theme_bg } }
     elements[#elements+1] = { Text = nf.ple_upper_left_triangle }
-    elements[#elements+1] = { Foreground = { Color = white } }
+    elements[#elements+1] = { Foreground = { Color = theme_fg } }
     elements[#elements+1] = { Text = ' ' .. text .. ' ' }
     if not is_last then
-      elements[#elements+1] = { Foreground = { Color = gray } }
+      elements[#elements+1] = { Foreground = { Color = theme_bg } }
       elements[#elements+1] = { Text = nf.ple_lower_right_triangle }
     end
   end
