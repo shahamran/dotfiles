@@ -283,6 +283,9 @@ vim.wo.number = true
 vim.o.cursorline = true
 vim.o.cursorlineopt = 'number'
 
+-- Vertical ruler
+vim.o.colorcolumn = '100'
+
 -- Relative line numbers
 vim.o.relativenumber = true
 
@@ -296,6 +299,9 @@ vim.o.clipboard = 'unnamedplus'
 
 -- Enable break indent
 vim.o.breakindent = true
+
+-- Fixes wezterm-related bug
+vim.o.termsync = false
 
 -- Save undo history
 vim.o.undofile = true
