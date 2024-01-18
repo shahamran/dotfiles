@@ -1,5 +1,6 @@
 -- Pull in the wezterm API
 local wez = require 'wezterm'
+local mux = wez.mux
 local act = wez.action
 local nf = wez.nerdfonts
 
@@ -7,6 +8,10 @@ local config = {}
 if wez.config_builder then
   config = wez.config_builder()
 end
+
+-- Misc
+
+config.audible_bell = 'Disabled'
 
 -- General appearance
 
@@ -308,5 +313,27 @@ config.unix_domains = {
 -- domain on startup.
 -- If you prefer to connect manually, leave out this line.
 -- config.default_gui_startup_args = { 'connect', 'unix' }
+
+config.ssh_domains = wez.default_ssh_domains()
+for _, dom in ipairs(config.ssh_domains) do
+  dom.assume_shell = 'Posix'
+end
+
+wez.on('gui-startup', function(_)
+  -- Attach to a mux domain in ssh, if available.
+  for _, dom in ipairs(config.ssh_domains) do
+    if dom.multiplexing ~= "None" then
+      -- Check if host is reachable by using `ping`
+      if os.execute('ping -c 1 -W 1 ' .. dom.remote_address) then
+        local mux_domain = mux.get_domain(dom.name)
+        if mux_domain then
+          mux_domain:attach()
+          wez.log_info(mux_domain:state())
+          break
+        end
+      end
+    end
+  end
+end)
 
 return config
