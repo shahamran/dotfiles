@@ -659,10 +659,6 @@ mason_lspconfig.setup_handlers {
   end,
 }
 
--- Disable virtual text for diagnostics
---
-vim.diagnostic.config({virtual_text = false})
-
 -- Configure LSP client to have rounded window borders.
 
 vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
@@ -675,9 +671,27 @@ vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
   { border = window_border }
 )
 
+vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
+  vim.lsp.diagnostic.on_publish_diagnostics,
+  { signs = true }
+)
+
 vim.diagnostic.config {
-  float = { border = window_border }
+  float = { border = window_border },
+  virtual_text = false,  -- Disable virtual text for diagnostics
 }
+
+-- Set diagnostics gutter icons
+local diagnostic_signs = {
+  Error = '',
+  Warn = '',
+  Hint = '',
+  Info = '',
+}
+for sign, icon in pairs(diagnostic_signs) do
+  local hl = 'DiagnosticSign' .. sign
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = '' })
+end
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
