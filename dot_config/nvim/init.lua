@@ -9,11 +9,11 @@ vim.g.neovide_scroll_animation_length = 0.06
 vim.g.neovide_cursor_animation_length = 0.03
 vim.g.neovide_cursor_trail_size = 0.2
 if vim.g.neovide then
-  vim.keymap.set('n', '<D-s>', ':w<CR>') -- Save
-  vim.keymap.set('v', '<D-c>', '"+y') -- Copy
-  vim.keymap.set('n', '<D-v>', '"+P') -- Paste normal mode
-  vim.keymap.set('v', '<D-v>', '"+P') -- Paste visual mode
-  vim.keymap.set('c', '<D-v>', '<C-R>+') -- Paste command mode
+  vim.keymap.set('n', '<D-s>', ':w<CR>')      -- Save
+  vim.keymap.set('v', '<D-c>', '"+y')         -- Copy
+  vim.keymap.set('n', '<D-v>', '"+P')         -- Paste normal mode
+  vim.keymap.set('v', '<D-v>', '"+P')         -- Paste visual mode
+  vim.keymap.set('c', '<D-v>', '<C-R>+')      -- Paste command mode
   vim.keymap.set('i', '<D-v>', '<ESC>l"+Pli') -- Paste insert mode
 end
 
@@ -60,7 +60,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim',       opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -103,7 +103,7 @@ require('lazy').setup({
       --   changedelete = { text = '~' },
       -- },
       current_line_blame_opts = {
-        delay = 100,  -- Display blame after 100ms instead of 1sec
+        delay = 100, -- Display blame after 100ms instead of 1sec
       },
       on_attach = function(bufnr)
         local gs = package.loaded.gitsigns
@@ -357,7 +357,7 @@ vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open float
 
 -- Setup neovim lua configuration
 require('neodev').setup {
-  override = function (root_dir, library)
+  override = function(root_dir, library)
     -- Enable neodev also in chezmoi dir
     if root_dir:find('chezmoi') then
       library.enabled = true
@@ -598,7 +598,7 @@ local on_attach = function(client, bufnr)
   end
 
   nmap('<leader>ti', toggle_inlay_hints, '[T]oggle [I]nlay hints')
-  enable_inlay_hints()  -- Enable inlay hints by default
+  enable_inlay_hints() -- Enable inlay hints by default
 end
 
 -- document existing key chains
@@ -688,7 +688,7 @@ vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
 
 vim.diagnostic.config {
   float = { border = window_border },
-  virtual_text = false,  -- Disable virtual text for diagnostics
+  virtual_text = false, -- Disable virtual text for diagnostics
 }
 
 -- Set diagnostics gutter icons
