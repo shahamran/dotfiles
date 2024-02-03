@@ -47,6 +47,9 @@ require('lazy').setup({
 
   'nvim-tree/nvim-web-devicons',
 
+  -- Move by sub-words, like camelCase
+  'chaoren/vim-wordmotion',
+
   {
     -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
@@ -446,7 +449,7 @@ local function telescope_live_grep_open_files()
   }
 end
 vim.keymap.set('n', '<leader>s/', telescope_live_grep_open_files, { desc = '[S]earch [/] in Open Files' })
-vim.keymap.set('n', '<leader>ss', require('telescope.builtin').builtin, { desc = '[S]earch [S]elect Telescope' })
+vim.keymap.set('n', '<leader>sS', require('telescope.builtin').builtin, { desc = '[S]earch [S]elect Telescope' })
 vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
 vim.keymap.set('n', '<leader>gg', ':LazyGitCurrentFile<cr>', { desc = 'Open lazy[g]it on Current File' })
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
@@ -456,7 +459,7 @@ vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc
 vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
-vim.keymap.set('n', '<leader>sS', require('auto-session.session-lens').search_session, {
+vim.keymap.set('n', '<leader>ss', require('auto-session.session-lens').search_session, {
   desc = '[S]earch [S]ession',
   noremap = true,
 })
