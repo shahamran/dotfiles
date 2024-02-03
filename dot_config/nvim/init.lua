@@ -35,7 +35,6 @@ local window_border = 'rounded'
 
 -- [[ Configure plugins ]]
 require('lazy').setup({
-
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
@@ -353,6 +352,17 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnos
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 -- vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
+-- Setup neovim lua configuration
+require('neodev').setup {
+  override = function (root_dir, library)
+    -- Enable neodev also in chezmoi dir
+    if root_dir:find('chezmoi') then
+      library.enabled = true
+      library.plugins = true
+    end
+  end
+}
+
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
@@ -633,9 +643,6 @@ local servers = {
     },
   },
 }
-
--- Setup neovim lua configuration
-require('neodev').setup()
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
