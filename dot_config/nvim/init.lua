@@ -8,6 +8,7 @@ vim.g.maplocalleader = ' '
 vim.g.neovide_scroll_animation_length = 0.06
 vim.g.neovide_cursor_animation_length = 0.03
 vim.g.neovide_cursor_trail_size = 0.2
+vim.g.neovide_input_macos_alt_is_meta = true
 if vim.g.neovide then
   vim.keymap.set('n', '<D-s>', ':w<CR>')      -- Save
   vim.keymap.set('v', '<D-c>', '"+y')         -- Copy
@@ -15,6 +16,8 @@ if vim.g.neovide then
   vim.keymap.set('v', '<D-v>', '"+P')         -- Paste visual mode
   vim.keymap.set('c', '<D-v>', '<C-R>+')      -- Paste command mode
   vim.keymap.set('i', '<D-v>', '<ESC>l"+Pli') -- Paste insert mode
+  vim.keymap.set('n', '<D-{>', ':bprevious<cr>')
+  vim.keymap.set('n', '<D-}>', ':bnext<cr>')
 end
 
 -- [[ Install `lazy.nvim` plugin manager ]]
