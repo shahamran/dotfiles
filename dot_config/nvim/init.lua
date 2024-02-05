@@ -108,6 +108,13 @@ require('lazy').setup({
       window = { border = window_border },
     }
   },
+
+  {
+    'folke/trouble.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    opts = {},
+  },
+
   -- Adds git related signs to the gutter, as well as utilities for managing changes
   {
     'lewis6991/gitsigns.nvim',
@@ -372,6 +379,17 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnos
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 -- vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
+-- Trouble
+local trouble = require('trouble')
+vim.keymap.set('n', '<leader>xx', function() trouble.toggle() end, { desc = 'Toggle' })
+vim.keymap.set('n', '<leader>xw', function() trouble.toggle('workspace_diagnostics') end,
+  { desc = 'Toggle [w]orkspace diagnostics' })
+vim.keymap.set('n', '<leader>xd', function() trouble.toggle('document_diagnostics') end,
+  { desc = 'Toggle [d]ocument diagnostics' })
+vim.keymap.set('n', '<leader>xq', function() trouble.toggle('quickfix') end, { desc = 'Toggle [q]uickfix' })
+vim.keymap.set('n', '<leader>xl', function() trouble.toggle('loclist') end, { desc = 'Toggle [l]oclist' })
+vim.keymap.set('n', '<leader>xr', function() trouble.toggle('lsp_references') end, { desc = 'Toggle LSP [r]eferences' })
+
 -- Setup neovim lua configuration
 require('neodev').setup {
   override = function(root_dir, library)
@@ -396,12 +414,17 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
+local trouble_telescope = require('trouble.providers.telescope')
 require('telescope').setup {
   defaults = {
     mappings = {
       i = {
         ['<C-u>'] = false,
         ['<C-d>'] = false,
+        ['<C-t>'] = trouble_telescope.open_with_trouble,
+      },
+      n = {
+        ['<C-t>'] = trouble_telescope.open_with_trouble,
       },
     },
   },
@@ -628,6 +651,7 @@ require('which-key').register {
   ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
   ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
   ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+  ['<leader>x'] = { name = 'Trouble', _ = 'which_key_ignore' },
 }
 -- register which-key VISUAL mode
 -- required for visual <leader>hs (hunk stage) to work
