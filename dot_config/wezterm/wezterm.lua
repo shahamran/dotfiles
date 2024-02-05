@@ -15,7 +15,7 @@ config.audible_bell = 'Disabled'
 
 -- General appearance
 
--- config.window_decorations = 'INTEGRATED_BUTTONS | RESIZE'
+config.window_decorations = 'INTEGRATED_BUTTONS | RESIZE'
 config.enable_scroll_bar = true
 config.font_size = 13
 config.harfbuzz_features = {'calt=0', 'clig=0', 'liga=0'}
@@ -23,7 +23,7 @@ config.window_close_confirmation = 'NeverPrompt'
 config.color_scheme = 'Dracula (Official)'
 -- config.color_scheme = 'Catppuccin Macchiato'
 config.window_padding = {
-  bottom = 0,
+  top = '2cell',
 }
 
 local theme = wez.color.get_builtin_schemes()[config.color_scheme]
