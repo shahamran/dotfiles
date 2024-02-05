@@ -274,6 +274,18 @@ config.keys = {
   },
 
   {
+    key = 'n',
+    mods = 'CMD|SHIFT',
+    action = act.SwitchWorkspaceRelative(1),
+  },
+
+  {
+    key = 'p',
+    mods = 'CMD|SHIFT',
+    action = act.SwitchWorkspaceRelative(-1),
+  },
+
+  {
     key = '[',
     mods = 'LEADER',
     action = act.ActivateCopyMode,
