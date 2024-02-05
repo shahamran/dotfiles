@@ -66,7 +66,18 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim',       opts = {} },
+      {
+        'j-hui/fidget.nvim',
+        opts = {
+          -- The rounded border here is too intrusive..
+          notification = {
+            window = {
+              -- border = window_border,
+              align = 'top',
+            }
+          },
+        }
+      },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
