@@ -4,3 +4,7 @@ frame = "transparent"
 normal = ["JetBrainsMono Nerd Font", "Apple Color Emoji", "Noto Color Emoji"]
 size = 12.5
 
+[font.features]
+# disable ligatures
+"JetBrainsMono Nerd Font" = ["-calt", "-clig", "-liga"]
+
