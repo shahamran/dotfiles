@@ -21,6 +21,20 @@ if vim.g.neovide then
   vim.keymap.set('n', '<D-}>', ':bnext<CR>')
   vim.keymap.set('i', '<D-{>', '<ESC>:bprevious<CR>')
   vim.keymap.set('i', '<D-}>', '<ESC>:bnext<CR>')
+  local zoom_in = 'vim.g.neovide_scale_factor = math.min(vim.g.neovide_scale_factor + 0.1,  3.0)'
+  local zoom_out = 'vim.g.neovide_scale_factor = math.max(vim.g.neovide_scale_factor - 0.1,  0.2)'
+  vim.keymap.set({ 'n', 'i', 'v' }, '<D-=>', ':lua ' .. zoom_in .. '<CR>', {
+    desc = 'Increase scale factor',
+    silent = true,
+  })
+  vim.keymap.set({ 'n', 'i', 'v' }, '<D-->', ':lua ' .. zoom_out .. '<CR>', {
+    desc = 'Decrease scale factor',
+    silent = true,
+  })
+  vim.keymap.set({ 'n', 'i', 'v' }, '<D-0>', ':lua vim.g.neovide_scale_factor = 1<CR>', {
+    desc = 'Reset scalr factor',
+    silent = true,
+  })
 end
 
 -- [[ Install `lazy.nvim` plugin manager ]]
