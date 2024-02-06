@@ -302,6 +302,14 @@ require('lazy').setup({
     cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
     ft = { 'markdown' },
     build = function() vim.fn['mkdp#util#install']() end,
+
+    {
+      'aznhe21/actions-preview.nvim',
+      config = function()
+        local ap = require('actions-preview')
+        vim.keymap.set({ 'v', 'n' }, '<leader>ca', ap.code_actions, { desc = '[C]ode [A]ctions' })
+      end,
+    },
   },
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
@@ -612,7 +620,7 @@ local on_attach = function(client, bufnr)
   end
 
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-  nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+  -- nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
   nmap('<leader>ch', vim.lsp.buf.incoming_calls, '[C]all [H]ierarchy')
 
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
