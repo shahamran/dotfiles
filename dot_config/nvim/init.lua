@@ -291,6 +291,7 @@ require('lazy').setup({
   },
 
   {
+    -- Opens lazygit in a floating terminal
     'kdheepak/lazygit.nvim',
     dependencies = {
       'nvim-lua/plenary.nvim'
@@ -298,18 +299,41 @@ require('lazy').setup({
   },
 
   {
+    -- Open rendered markdown in browser
     'iamcco/markdown-preview.nvim',
     cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
     ft = { 'markdown' },
     build = function() vim.fn['mkdp#util#install']() end,
 
-    {
-      'aznhe21/actions-preview.nvim',
-      config = function()
-        local ap = require('actions-preview')
-        vim.keymap.set({ 'v', 'n' }, '<leader>ca', ap.code_actions, { desc = '[C]ode [A]ctions' })
-      end,
+  },
+
+  {
+    -- Preview diff of LSP code action
+    'aznhe21/actions-preview.nvim',
+    config = function()
+      local ap = require('actions-preview')
+      vim.keymap.set({ 'v', 'n' }, '<leader>ca', ap.code_actions, { desc = '[C]ode [A]ctions' })
+    end,
+  },
+
+  {
+    -- Tree UI for call-hierarchy
+    'ldelossa/litee-calltree.nvim',
+    dependencies = {
+      'ldelossa/litee.nvim',
     },
+    config = function()
+      require('litee.lib').setup({})
+      require('litee.calltree').setup({})
+    end,
+  },
+
+  {
+    -- Surround selections
+    'kylechui/nvim-surround',
+    version = '*', -- Use for stability; omit to use `main` branch for the latest features
+    event = 'VeryLazy',
+    opts = {},
   },
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
