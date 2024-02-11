@@ -83,10 +83,8 @@ require('lazy').setup({
       {
         'j-hui/fidget.nvim',
         opts = {
-          -- The rounded border here is too intrusive..
           notification = {
             window = {
-              -- border = window_border,
               align = 'top',
             }
           },
@@ -133,15 +131,8 @@ require('lazy').setup({
   {
     'lewis6991/gitsigns.nvim',
     opts = {
-      -- signs = {
-      --   add = { text = '+' },
-      --   change = { text = '~' },
-      --   delete = { text = '_' },
-      --   topdelete = { text = '‾' },
-      --   changedelete = { text = '~' },
-      -- },
       current_line_blame_opts = {
-        delay = 100, -- Display blame after 100ms instead of 1sec
+        delay = 500,
       },
       on_attach = function(bufnr)
         local gs = package.loaded.gitsigns
@@ -323,7 +314,11 @@ require('lazy').setup({
       'ldelossa/litee.nvim',
     },
     config = function()
-      require('litee.lib').setup({})
+      require('litee.lib').setup({
+        panel = {
+            orientation = 'bottom',
+        },
+      })
       require('litee.calltree').setup({})
     end,
   },
