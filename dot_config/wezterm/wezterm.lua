@@ -341,7 +341,6 @@ wez.on('gui-startup', function(_)
         if mux_domain then
           mux_domain:attach()
           wez.log_info(mux_domain:state())
-          break
         end
       end
     end
