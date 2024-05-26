@@ -8,40 +8,6 @@ return {
       },
     },
   },
-  -- Auto-save sessions
-  {
-    "rmagatti/auto-session",
-    opts = {
-      log_level = "error",
-      auto_session_suppress_dirs = { "~/", "/" },
-    },
-    keys = {
-      {
-        "<leader>fs",
-        function()
-          require("auto-session.session-lens").search_session()
-        end,
-        desc = "Sessions",
-      },
-    },
-  },
-  {
-    "nvimdev/dashboard-nvim",
-    optional = true,
-    opts = function(_, opts)
-      local sessions = {
-        action = 'lua require("auto-session.session-lens").search_session()',
-        desc = " Sessions",
-        icon = " ",
-        key = "S",
-      }
-
-      sessions.desc = sessions.desc .. string.rep(" ", 43 - #sessions.desc)
-      sessions.key_format = "  %s"
-
-      table.insert(opts.config.center, 3, sessions)
-    end,
-  },
   -- Remote config - in noevide
   {
     "amitds1997/remote-nvim.nvim",
@@ -95,5 +61,19 @@ return {
       insert_mappings = true,
       size = 25,
     },
+  },
+  -- Documentation generation
+  {
+    "danymat/neogen",
+    config = true,
+  },
+
+  -- Highlights in chezmoi source dir
+  {
+    "alker0/chezmoi.vim",
+    lazy = false,
+    init = function()
+      vim.g["chezmoi#use_tmp_buffer"] = true
+    end,
   },
 }
