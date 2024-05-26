@@ -9,22 +9,22 @@ return {
     },
   },
   -- Remote config - in noevide
-  {
-    "amitds1997/remote-nvim.nvim",
-    version = "*", -- Pin to GitHub releases
-    opts = {
-      client_callback = function(port, _)
-        local cmd = ("neovide --server localhost:%s"):format(port)
-        vim.fn.jobstart(cmd, {
-          detach = true,
-          on_exit = function(job_id, exit_code, event_type)
-            -- This function will be called when the job exits
-            print("Job", job_id, "exited with code", exit_code, "Event type:", event_type)
-          end,
-        })
-      end,
-    },
-  },
+  -- {
+  --   "amitds1997/remote-nvim.nvim",
+  --   version = "*", -- Pin to GitHub releases
+  --   opts = {
+  --     client_callback = function(port, _)
+  --       local cmd = ("neovide --server localhost:%s"):format(port)
+  --       vim.fn.jobstart(cmd, {
+  --         detach = true,
+  --         on_exit = function(job_id, exit_code, event_type)
+  --           -- This function will be called when the job exits
+  --           print("Job", job_id, "exited with code", exit_code, "Event type:", event_type)
+  --         end,
+  --       })
+  --     end,
+  --   },
+  -- },
   -- Toggle line blame
   {
     "lewis6991/gitsigns.nvim",
