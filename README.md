@@ -7,12 +7,10 @@ This repo uses [chezmoi] to manage the configuration files.
 ## Dependencies
 
 * Terminal: [WezTerm]
-* Shell: fish / zsh
+* Shell: fish
 * Prompt: [starship]
-* Editor: [Neovim] with [Neovide] GUI
+* Editor: [Neovim]
 
 [WezTerm]: https://wezfurlong.org/wezterm/
 [starship]: https://starship.rs/
 [Neovim]: https://neovim.io/
-[Neovide]: https://neovide.dev/
-
