@@ -18,10 +18,12 @@ config.audible_bell = 'Disabled'
 config.window_decorations = 'INTEGRATED_BUTTONS | RESIZE'
 config.enable_scroll_bar = true
 config.font_size = 13
+-- 20 chars for tab title (4 goes to decoration)
+config.tab_max_width = 24
+-- Disable ligatures
 config.harfbuzz_features = {'calt=0', 'clig=0', 'liga=0'}
 config.window_close_confirmation = 'NeverPrompt'
 config.color_scheme = 'Dracula (Official)'
--- config.color_scheme = 'Catppuccin Macchiato'
 config.window_padding = {
   top = '2cell',
 }
@@ -33,7 +35,8 @@ local accent = theme.brights[5]
 local active = theme.brights[1]
 local strong = theme.brights[3]
 
-config.command_palette_bg_color = theme_bg
+local cmd_bg = wez.color.parse(theme_bg)
+config.command_palette_bg_color = cmd_bg:darken(0.3)
 config.command_palette_fg_color = theme_fg
 config.command_palette_rows = 14
 
@@ -96,6 +99,9 @@ wez.on(
     local edge_bg = theme_bg
     local edge_fg = background
     local title = tab_title(tab)
+    if tab.active_pane.is_zoomed then
+      title = '🔍 ' .. title
+    end
     -- Ensure enough space for separators and spaces
     title = wez.truncate_right(title, max_width - 4)
     -- Each tab has this powerline diagonal effect: \ tab \
@@ -172,6 +178,12 @@ config.leader = {
 }
 
 config.keys = {
+  -- Command palette on <leader>:
+  {
+    key = ':',
+    mods = 'LEADER',
+    action = act.ActivateCommandPalette,
+  },
   -- Disable quick-select on ctrl+shift+space
   {
     key = ' ',
@@ -330,6 +342,8 @@ config.ssh_domains = wez.default_ssh_domains()
 for _, dom in ipairs(config.ssh_domains) do
   dom.assume_shell = 'Posix'
 end
+
+config.quick_select_remove_styling = true
 
 wez.on('gui-startup', function(_)
   -- Attach to a mux domain in ssh, if available.
