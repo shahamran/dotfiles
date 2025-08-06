@@ -7,3 +7,9 @@ vim.g.autoformat = false
 vim.g.snacks_animate = false
 vim.o.cursorline = true
 vim.o.cursorlineopt = "number"
+vim.o.undofile = false
+vim.diagnostic.config({
+  virtual_lines = {
+    current_line = true,
+  },
+})
